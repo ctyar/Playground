@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using Playground.ToDos;
+
 namespace Playground;
 
 public class Program
@@ -12,6 +15,11 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
         builder.Services.AddSwaggerUI();
+
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
         var app = builder.Build();
 
@@ -44,6 +52,12 @@ public class Program
             return forecast;
         })
         .WithName("GetWeatherForecast");
+
+        app.MapGet("todos", ToDoEndpoints.GetAsync)
+            .WithName("ToDos");
+
+        app.MapPost("todos", ToDoEndpoints.CreateAsync)
+            .WithParameterValidation();
 
         app.Run();
     }
