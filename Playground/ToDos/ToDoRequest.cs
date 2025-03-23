@@ -2,7 +2,7 @@
 
 namespace Playground.ToDos;
 
-public class ToDoCreateRequest
+public class ToDoRequest
 {
     [Required]
     public string? Description { get; set; } = null!;
