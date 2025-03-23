@@ -1,6 +1,6 @@
-﻿namespace Playground.ToDos;
+﻿namespace Playground.Todos;
 
-public class ToDo
+public class Todo
 {
     public int Id { get; set; }
     public string Description { get; set; } = null!;

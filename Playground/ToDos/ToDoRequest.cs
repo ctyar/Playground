@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Playground.ToDos;
+namespace Playground.Todos;
 
-public class ToDoRequest
+public class TodoRequest
 {
     [Required]
     public string? Description { get; set; } = null!;

@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
-using Playground.ToDos;
+using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Mvc;
+using Playground.Todos;
 
 namespace Playground;
 
@@ -27,7 +29,26 @@ public class Program
             context.Database.EnsureCreated();
         }
 
+        ProblemDetailsExtensions.AddProblemDetails(builder.Services, options =>
+        {
+            options.IncludeExceptionDetails = (_, _) => false;
+            options.ShouldLogUnhandledException = (_, _, pd) => pd.Status == StatusCodes.Status500InternalServerError;
+
+            options.Map<NotFoundException>(ex => new ProblemDetails
+            {
+                Title = "Could not find the entity",
+                Status = StatusCodes.Status404NotFound,
+                Detail = ex.Message,
+            });
+
+            options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
+        });
+
+        builder.Services.AddTransient<TodoService>();
+
         var app = builder.Build();
+
+        app.UseProblemDetails();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -40,7 +61,7 @@ public class Program
 
         app.UseAuthorization();
 
-        ToDoEndpoints.Map(app);
+        TodoEndpoints.Map(app);
 
         app.Run();
     }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace Playground.ToDos;
+namespace Playground.Todos;
 
-public static class ToDoEndpoints
+public static class TodoEndpoints
 {
     public static void Map(WebApplication app)
     {
@@ -23,61 +22,30 @@ public static class ToDoEndpoints
             .Produces(StatusCodes.Status404NotFound);
     }
 
-    public static async Task<List<ToDo>> GetAsync([FromServices] DbContext dbContext)
+    public static async Task<List<Todo>> GetAsync([FromServices] TodoService todoService)
     {
-        var toDos = await dbContext.ToDos
-            .AsNoTracking()
-            .ToListAsync();
+        var todos = await todoService.GetAsync();
 
-        return toDos;
+        return todos;
     }
 
-    public static async Task<IResult> CreateAsync(ToDoRequest request, [FromServices] DbContext dbContext)
+    public static async Task<IResult> CreateAsync(TodoRequest request, [FromServices] TodoService todoService)
     {
-        dbContext.ToDos.Add(new ToDo
-        {
-            Description = request.Description!,
-            DueDate = request.DueDate,
-            Priority = request.Priority!.Value,
-            Tags = request.Tags!,
-        });
-
-        await dbContext.SaveChangesAsync();
+        await todoService.CreateAsync(request);
 
         return Results.Created();
     }
 
-    private static async Task<IResult> DeleteAsync(int id, [FromServices] DbContext dbContext)
+    private static async Task<IResult> DeleteAsync(int id, [FromServices] TodoService todoService)
     {
-        var count = await dbContext.ToDos
-            .Where(i => i.Id == id)
-            .ExecuteDeleteAsync();
-
-        if (count == 0)
-        {
-            return Results.NotFound();
-        }
+        await todoService.DeleteAsync(id);
 
         return Results.NoContent();
     }
 
-    private static async Task<IResult> UpdateAsync(int id, ToDoRequest request, [FromServices] DbContext dbContext)
+    private static async Task<IResult> UpdateAsync(int id, TodoRequest request, [FromServices] TodoService todoService)
     {
-        var toDo = await dbContext.ToDos
-            .FirstOrDefaultAsync(i => i.Id == id);
-
-        if (toDo is null)
-        {
-            return Results.NotFound();
-        }
-
-        toDo.Description = request.Description!;
-        toDo.DueDate = request.DueDate;
-        toDo.Priority = request.Priority!.Value;
-        toDo.Tags = request.Tags!;
-
-        dbContext.Update(toDo);
-        await dbContext.SaveChangesAsync();
+        await todoService.UpdateAsync(id, request);
 
         return Results.NoContent();
     }

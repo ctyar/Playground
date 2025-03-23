@@ -1,4 +1,4 @@
-﻿namespace Playground.ToDos;
+﻿namespace Playground.Todos;
 
 public enum Priority
 {
