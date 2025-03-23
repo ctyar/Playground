@@ -21,6 +21,12 @@ public class Program
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
 
+        builder.Services.AddDbContext<DbContext>();
+        using (var context = new DbContext())
+        {
+            context.Database.EnsureCreated();
+        }
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -34,30 +40,7 @@ public class Program
 
         app.UseAuthorization();
 
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-        {
-            var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                {
-                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = summaries[Random.Shared.Next(summaries.Length)]
-                })
-                .ToArray();
-            return forecast;
-        })
-        .WithName("GetWeatherForecast");
-
-        app.MapGet("todos", ToDoEndpoints.GetAsync)
-            .WithName("ToDos");
-
-        app.MapPost("todos", ToDoEndpoints.CreateAsync)
-            .WithParameterValidation();
+        ToDoEndpoints.Map(app);
 
         app.Run();
     }
