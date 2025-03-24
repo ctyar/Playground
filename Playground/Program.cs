@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using Playground.Todos;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace Playground;
 
@@ -14,7 +15,8 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        builder.Services.AddHybridCache();
+        builder.Services.AddFusionCache()
+            .AsHybridCache();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
