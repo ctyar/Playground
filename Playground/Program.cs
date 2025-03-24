@@ -16,7 +16,11 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        builder.Services.AddFusionCache()
+        builder.Services.AddFusionCache().
+            WithOptions(o =>
+            {
+                o.DefaultEntryOptions.Duration = TimeSpan.FromMinutes(30);
+            })
             .AsHybridCache();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -15,11 +15,13 @@ public class CachedTodoService
 
     public async Task<List<Todo>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _cache.GetOrCreateAsync(
+        var result = await _cache.GetOrCreateAsync(
             "todo-all",
             async cancel => await _todoService.GetAllAsync(cancel),
             cancellationToken: cancellationToken
         );
+
+        return result.Take(10).ToList();
     }
 
     public async Task<Todo> GetAsync(int id, CancellationToken cancellationToken)

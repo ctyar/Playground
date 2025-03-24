@@ -13,9 +13,25 @@ public class TodoService
 
     public async Task<List<Todo>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var result = await _dbContext.Todos
+        /*var result = await _dbContext.Todos
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken);*/
+
+        // To simulate a big and slow request
+        await Task.Delay(2000, cancellationToken);
+        var count = 30 * 3000 * 2;
+        var result = new List<Todo>();
+        for (var i = 0; i < count; i++)
+        {
+            result.Add(new Todo
+            {
+                Id = i,
+                Description = $"Todo {i}",
+                DueDate = DateTime.Now,
+                Priority = Priority.Critical,
+                Tags = [],
+            });
+        }
 
         return result;
     }
