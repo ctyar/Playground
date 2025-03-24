@@ -11,6 +11,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.AddServiceDefaults();
 
         // Add services to the container.
         builder.Services.AddAuthorization();
@@ -52,6 +53,8 @@ public class Program
         builder.Services.AddTransient<CachedTodoService>();
 
         var app = builder.Build();
+
+        app.MapDefaultEndpoints();
 
         app.UseProblemDetails();
 
