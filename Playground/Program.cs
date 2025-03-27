@@ -1,8 +1,5 @@
 using System.Text.Json.Serialization;
-using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Mvc;
 using Playground.Todos;
-using ZiggyCreatures.Caching.Fusion;
 
 namespace Playground;
 
@@ -11,17 +8,9 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.AddServiceDefaults();
 
         // Add services to the container.
         builder.Services.AddAuthorization();
-
-        builder.Services.AddFusionCache().
-            WithOptions(o =>
-            {
-                o.DefaultEntryOptions.Duration = TimeSpan.FromMinutes(30);
-            })
-            .AsHybridCache();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -32,35 +21,7 @@ public class Program
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
 
-        builder.Services.AddDbContext<DbContext>();
-        using (var context = new DbContext())
-        {
-            context.Database.EnsureCreated();
-        }
-
-        ProblemDetailsExtensions.AddProblemDetails(builder.Services, options =>
-        {
-            options.IncludeExceptionDetails = (_, _) => false;
-            options.ShouldLogUnhandledException = (_, _, pd) => pd.Status == StatusCodes.Status500InternalServerError;
-
-            options.Map<NotFoundException>(ex => new ProblemDetails
-            {
-                Title = "Could not find the entity",
-                Status = StatusCodes.Status404NotFound,
-                Detail = ex.Message,
-            });
-
-            options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
-        });
-
-        builder.Services.AddTransient<TodoService>();
-        builder.Services.AddTransient<CachedTodoService>();
-
         var app = builder.Build();
-
-        app.MapDefaultEndpoints();
-
-        app.UseProblemDetails();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
