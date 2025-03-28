@@ -70,6 +70,8 @@ public class Program
             options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
         });
 
+        builder.Services.AddValidation();
+
         builder.Services.AddTransient<TodoService>();
         builder.Services.AddTransient<CachedTodoService>();
 
