@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.Http.Validation.Generated</InterceptorsNamespaces>
@@ -12,14 +12,25 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0-preview.2.25163.8" Condition="'$(TargetFramework)'=='net10.0'" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" Condition="'$(TargetFramework)'=='net9.0'" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" Condition="'$(TargetFramework)'=='net9.0'" />
-    <PackageReference Include="SwaggerUI.OpenApi" Version="1.1.0" />
+    <!--<PackageReference Include="SwaggerUI.OpenApi" Version="1.1.0" />-->
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.0" />
     <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="7.0.0-rc.2.22476.2" />
+    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Playground.ServiceDefaults\Playground.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SwaggerUI.OpenApi">
+      <HintPath>..\..\OpenApi\src\SwaggerUI.OpenApi\bin\Debug\net9.0\SwaggerUI.OpenApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SwaggerUI.OpenApi.Versioning">
+      <HintPath>..\..\OpenApi\src\SwaggerUI.OpenApi.Versioning\bin\Debug\net9.0\SwaggerUI.OpenApi.Versioning.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

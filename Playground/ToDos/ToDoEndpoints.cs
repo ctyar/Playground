@@ -6,28 +6,52 @@ public static class TodoEndpoints
 {
     public static void Map(WebApplication app)
     {
-        app.MapGet("todos", GetAllAsync);
+        var vApi = app.NewVersionedApi();
+        var group = vApi.MapGroup("api/todos");
 
-        app.MapPost("todos", CreateAsync)
+        group.MapGet("", GetAllAsyncV1)
+            .HasApiVersion(1, 0);
+
+        group.MapGet("", GetAllAsync)
+            .HasApiVersion(2, 0);
+
+        group.MapPost("", CreateAsync)
+            .HasApiVersion(1, 0)
+            .HasApiVersion(2, 0)
             .Produces(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
-        app.MapGet("todos/{id}", GetAsync)
+        group.MapGet("{id}", GetAsync)
+            .HasApiVersion(1, 0)
+            .HasApiVersion(2, 0)
             .Produces(StatusCodes.Status404NotFound);
 
-        app.MapDelete("todos/{id}", DeleteAsync)
+        group.MapPut("{id}", UpdateAsync)
+            .HasApiVersion(1, 0)
+            .HasApiVersion(2, 0)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound);
 
-        app.MapPut("todos/{id}", UpdateAsync)
+        group.MapDelete("{id}", DeleteAsync)
+            .HasApiVersion(2, 0)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static async Task<List<Todo>> GetAllAsyncV1([FromServices] CachedTodoService cachedTodoService,
+        CancellationToken cancellationToken)
+    {
+        var todos = await cachedTodoService.GetAllAsync(cancellationToken);
+
+        return todos;
     }
 
     private static async Task<List<Todo>> GetAllAsync([FromServices] CachedTodoService cachedTodoService,
         CancellationToken cancellationToken)
     {
         var todos = await cachedTodoService.GetAllAsync(cancellationToken);
+
+        todos.Reverse();
 
         return todos;
     }

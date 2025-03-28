@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Asp.Versioning;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using Playground.Todos;
@@ -14,7 +15,6 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
 
-        // Add services to the container.
         builder.Services.AddAuthorization();
 
         builder.Services.AddFusionCache().
@@ -41,15 +41,24 @@ public class Program
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi(o =>
+        builder.Services
+            .AddApiVersioning(o =>
+            {
+                o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            })
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.ApiVersionParameterSource = new HeaderApiVersionReader("x-api-version");
+            });
+
+        builder.Services.AddOpenApi("v1", o =>
         {
             o.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
-            o.AddDocumentTransformer((document, context, cancellationToken) =>
-            {
-                document.Servers = [];
-                return Task.CompletedTask;
-            });
+        });
+        builder.Services.AddOpenApi("v2", o =>
+        {
+            o.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
         });
         builder.Services.AddSwaggerUI();
 
@@ -90,11 +99,11 @@ public class Program
 
         app.UseProblemDetails();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapSwaggerUI();
+
+            app.MapSwaggerUIVersioning();
         }
 
         app.UseHttpsRedirection();
