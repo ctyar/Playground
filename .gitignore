@@ -484,3 +484,5 @@ $RECYCLE.BIN/
 *.swp
 
 Playground/Database.db
+Playground/Database.db-shm
+Playground/Database.db-wal
