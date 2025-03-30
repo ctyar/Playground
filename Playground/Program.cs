@@ -41,7 +41,10 @@ public class Program
         });
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services.AddOpenApi(o =>
+        {
+            o.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+        });
         builder.Services.AddSwaggerUI();
 
         builder.Services.ConfigureHttpJsonOptions(options =>
