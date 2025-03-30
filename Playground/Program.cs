@@ -32,7 +32,8 @@ public class Program
                     factory: partition => new FixedWindowRateLimiterOptions
                     {
                         AutoReplenishment = true,
-                        QueueLimit = 0,
+                        QueueLimit = 1,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         PermitLimit = 10, // 10 req per 10 second
                         Window = TimeSpan.FromSeconds(10),
                     }));
