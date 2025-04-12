@@ -12,6 +12,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.AddServiceDefaults();
 
         // Add services to the container.
         builder.Services.AddAuthorization();
@@ -44,6 +45,11 @@ public class Program
         builder.Services.AddOpenApi(o =>
         {
             o.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+            o.AddDocumentTransformer((document, context, cancellationToken) =>
+            {
+                document.Servers = [];
+                return Task.CompletedTask;
+            });
         });
         builder.Services.AddSwaggerUI();
 
@@ -79,6 +85,8 @@ public class Program
         builder.Services.AddTransient<CachedTodoService>();
 
         var app = builder.Build();
+
+        app.MapDefaultEndpoints();
 
         app.UseProblemDetails();
 

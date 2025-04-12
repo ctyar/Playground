@@ -3,5 +3,7 @@
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
   </Folder>
+  <Project Path="Playground.AppHost/Playground.AppHost.csproj" Id="c674a88b-b603-4899-8321-48b32148f061" />
+  <Project Path="Playground.ServiceDefaults/Playground.ServiceDefaults.csproj" />
   <Project Path="Playground/Playground.csproj" />
 </Solution>
