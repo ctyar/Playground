@@ -44,7 +44,6 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi(o =>
         {
-            o.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
             o.AddDocumentTransformer((document, context, cancellationToken) =>
             {
                 document.Servers = [];
