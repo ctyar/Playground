@@ -43,16 +43,13 @@ public class Program
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi(o =>
-        {
-            o.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
-        });
+        builder.Services.AddOpenApi();
         builder.Services.AddSwaggerUI();
 
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
         });
 
         builder.Services.AddDbContext<DbContext>();
