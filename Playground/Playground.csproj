@@ -9,16 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.3.25172.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0-preview.3.25171.6" />
     <PackageReference Include="SwaggerUI.OpenApi" Version="1.2.0" />
-    <!-- Don't update to 6.5.1 https://github.com/khellang/Middleware/issues/182 -->
-    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.0" />
-    <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="7.0.0-rc.2.22476.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Playground.ServiceDefaults\Playground.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
