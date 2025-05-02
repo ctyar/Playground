@@ -68,11 +68,11 @@ public class Program
             options.IncludeExceptionDetails = (_, _) => false;
             options.ShouldLogUnhandledException = (_, _, pd) => pd.Status == StatusCodes.Status500InternalServerError;
 
-            options.Map<NotFoundException>(ex => new ProblemDetails
+            options.Map<ProblemDetailsException>(ex => new ProblemDetails
             {
-                Title = "Could not find the entity",
-                Status = StatusCodes.Status404NotFound,
-                Detail = ex.Message,
+                Title = ex.ProblemDetails.Title,
+                Status = ex.ProblemDetails.Status,
+                Detail = ex.ProblemDetails.Detail,
             });
 
             options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Playground.Todos;
 
@@ -32,7 +33,11 @@ public class TodoService
 
         if (todo is null)
         {
-            throw new NotFoundException();
+            throw new ProblemDetailsException(new ProblemDetails
+            {
+                Title = "Could not find the todo",
+                Status = StatusCodes.Status404NotFound,
+            });
         }
 
         return todo;
@@ -66,7 +71,11 @@ public class TodoService
 
         if (todo is null)
         {
-            throw new NotFoundException();
+            throw new ProblemDetailsException(new ProblemDetails
+            {
+                Title = "Could not find the todo",
+                Status = StatusCodes.Status404NotFound,
+            });
         }
 
         todo.Description = request.Description!;
