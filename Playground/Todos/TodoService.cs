@@ -14,7 +14,7 @@ public class TodoService
 
     public async Task<List<Todo>> GetAllAsync(CancellationToken cancellationToken)
     {
-        // To simulate a big and slow request
+        // To simulate a slow request
         await Task.Delay(2000, cancellationToken);
 
         return await _dbContext.Todos
@@ -24,12 +24,12 @@ public class TodoService
 
     public async Task<Todo> GetAsync(int id, CancellationToken cancellationToken)
     {
+        // To simulate a slow request
+        await Task.Delay(2000, cancellationToken);
+
         var todo = await _dbContext.Todos
             .AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
-
-        // To simulate an slow request
-        await Task.Delay(2000, cancellationToken);
 
         if (todo is null)
         {
@@ -45,7 +45,7 @@ public class TodoService
 
     public async Task CreateAsync(TodoRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Invalidate cache
+        // TODO: Invalidate the cache
         _dbContext.Todos.Add(new Todo
         {
             Description = request.Description!,
