@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.3.25172.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0-preview.3.25171.6" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0-preview.5.25277.114" />
     <PackageReference Include="SwaggerUI.OpenApi" Version="2.2.0" />
     <!-- Don't update to 6.5.1 https://github.com/khellang/Middleware/issues/182 -->
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.0" />
