@@ -2,7 +2,7 @@
 
 namespace Playground.Todos;
 
-public class CachedTodoService
+public class CachedTodoService : ITodoService
 {
     private readonly TodoService _todoService;
     private readonly HybridCache _cache;
@@ -13,6 +13,21 @@ public class CachedTodoService
         _cache = hybridCache;
     }
 
+    public async Task CreateAsync(TodoRequest request, CancellationToken cancellationToken)
+    {
+        await _todoService.CreateAsync(request, cancellationToken);
+
+        await _cache.RemoveAsync("todo-all", cancellationToken);
+    }
+
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+    {
+        await _todoService.DeleteAsync(id, cancellationToken);
+
+        await _cache.RemoveAsync("todo-all", cancellationToken);
+        await _cache.RemoveAsync($"todo-{id}", cancellationToken);
+    }
+
     public async Task<List<Todo>> GetAllAsync(CancellationToken cancellationToken)
     {
         var result = await _cache.GetOrCreateAsync(
@@ -21,7 +36,7 @@ public class CachedTodoService
             cancellationToken: cancellationToken
         );
 
-        return result.Take(10).ToList();
+        return result;
     }
 
     public async Task<Todo> GetAsync(int id, CancellationToken cancellationToken)
@@ -31,5 +46,13 @@ public class CachedTodoService
             async cancel => await _todoService.GetAsync(id, cancel),
             cancellationToken: cancellationToken
         );
+    }
+
+    public async Task UpdateAsync(int id, TodoRequest request, CancellationToken cancellationToken)
+    {
+        await _todoService.UpdateAsync(id, request, cancellationToken);
+
+        await _cache.RemoveAsync("todo-all", cancellationToken);
+        await _cache.RemoveAsync($"todo-{id}", cancellationToken);
     }
 }

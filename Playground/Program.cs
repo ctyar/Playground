@@ -79,7 +79,7 @@ public class Program
         });
 
         builder.Services.AddTransient<TodoService>();
-        builder.Services.AddTransient<CachedTodoService>();
+        builder.Services.AddTransient<ITodoService, CachedTodoService>();
 
         var app = builder.Build();
 

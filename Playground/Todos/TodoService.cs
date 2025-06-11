@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Playground.Todos;
 
-public class TodoService
+public class TodoService : ITodoService
 {
     private readonly DbContext _dbContext;
 
@@ -45,7 +45,6 @@ public class TodoService
 
     public async Task CreateAsync(TodoRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Invalidate the cache
         _dbContext.Todos.Add(new Todo
         {
             Description = request.Description!,

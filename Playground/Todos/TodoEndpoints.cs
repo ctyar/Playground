@@ -25,15 +25,15 @@ public static class TodoEndpoints
             .Produces(StatusCodes.Status404NotFound);
     }
 
-    private static async Task<List<Todo>> GetAllAsync([FromServices] CachedTodoService cachedTodoService,
+    private static async Task<List<Todo>> GetAllAsync([FromServices] ITodoService todoService,
         CancellationToken cancellationToken)
     {
-        var todos = await cachedTodoService.GetAllAsync(cancellationToken);
+        var todos = await todoService.GetAllAsync(cancellationToken);
 
         return todos;
     }
 
-    private static async Task<IResult> CreateAsync(TodoRequest request, [FromServices] TodoService todoService,
+    private static async Task<IResult> CreateAsync(TodoRequest request, [FromServices] ITodoService todoService,
         CancellationToken cancellationToken)
     {
         await todoService.CreateAsync(request, cancellationToken);
@@ -41,15 +41,15 @@ public static class TodoEndpoints
         return Results.Created();
     }
 
-    private static async Task<Todo> GetAsync(int id, [FromServices] CachedTodoService cachedTodoService,
+    private static async Task<Todo> GetAsync(int id, [FromServices] ITodoService todoService,
         CancellationToken cancellationToken)
     {
-        var todo = await cachedTodoService.GetAsync(id, cancellationToken);
+        var todo = await todoService.GetAsync(id, cancellationToken);
 
         return todo;
     }
 
-    private static async Task<IResult> DeleteAsync(int id, [FromServices] TodoService todoService,
+    private static async Task<IResult> DeleteAsync(int id, [FromServices] ITodoService todoService,
         CancellationToken cancellationToken)
     {
         await todoService.DeleteAsync(id, cancellationToken);
@@ -57,7 +57,7 @@ public static class TodoEndpoints
         return Results.NoContent();
     }
 
-    private static async Task<IResult> UpdateAsync(int id, TodoRequest request, [FromServices] TodoService todoService,
+    private static async Task<IResult> UpdateAsync(int id, TodoRequest request, [FromServices] ITodoService todoService,
         CancellationToken cancellationToken)
     {
         await todoService.UpdateAsync(id, request, cancellationToken);
