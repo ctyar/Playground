@@ -58,10 +58,6 @@ public class Program
         });
 
         builder.Services.AddDbContext<DbContext>();
-        using (var context = new DbContext())
-        {
-            context.Database.EnsureCreated();
-        }
 
         ProblemDetailsExtensions.AddProblemDetails(builder.Services, options =>
         {
@@ -82,6 +78,14 @@ public class Program
         builder.Services.AddTransient<ITodoService, CachedTodoService>();
 
         var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            using (var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>())
+            {
+                dbContext.Database.EnsureCreated();
+            }
+        }
 
         app.MapDefaultEndpoints();
 
