@@ -11,7 +11,7 @@ public static class TodoEndpoints
         app.MapPost("todos", CreateAsync)
             .WithParameterValidation()
             .Produces(StatusCodes.Status201Created)
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem();
 
         app.MapGet("todos/{id}", GetAsync)
             .Produces(StatusCodes.Status404NotFound);
